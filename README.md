@@ -1,6 +1,6 @@
 # 🛒 E-Commerce Backend API (.NET)
 
-A production-ready E-commerce backend system built using ASP.NET Core, following clean architecture principles and real-world backend design patterns.
+A production-ready E-commerce backend system built using ASP.NET Core, following clean layered architecture principles and real-world backend design patterns.
 
 ---
 
@@ -10,7 +10,7 @@ This project simulates a real-world e-commerce backend system with advanced feat
 
 It includes authentication, product management, cart handling, order processing, payment integration, and email notifications.
 
-The system is designed with scalability and maintainability in mind, using modern backend architecture patterns such as Repository Pattern and Unit of Work.
+The system is designed with scalability and maintainability in mind, using modern backend architecture patterns such as Generic Repository, Repository Pattern, and Unit of Work.
 
 ---
 
@@ -36,13 +36,13 @@ The system is designed with scalability and maintainability in mind, using moder
 
 ### 💳 Payments
 - Stripe Checkout Integration
-- Webhook Handling for Payment Confirmation
+- Stripe Webhook Handling for Payment Confirmation
 
 ### 📧 Notifications
 - Email Confirmation using Resend API
 
 ### 🎯 Recommendations
-- Recommendation system based on user behavior
+- Recommendation system based on user behavior and purchase history
 
 ---
 
@@ -59,6 +59,7 @@ The project follows a clean layered architecture:
 
 ### 🔥 Key Design Patterns
 
+- Generic Repository Pattern
 - Repository Pattern
 - Unit of Work Pattern
 - Dependency Injection
@@ -73,6 +74,15 @@ The project follows a clean layered architecture:
 - SQL Server
 - Stripe API
 - Resend Email API
+
+---
+
+## ⚙️ Key Highlights
+
+- Implemented Generic Repository Pattern to reduce code duplication
+- Designed scalable data access layer using Unit of Work
+- Integrated Stripe for real-world payment workflow
+- Built recommendation system based on user behavior
 
 ---
 
@@ -95,24 +105,24 @@ The project follows a clean layered architecture:
 ## ▶️ How to Run
 
 1. Clone the repository  
-2. Update appsettings.json (add your keys)
+2. Update `appsettings.json` (add your configuration and API keys)
 3. Apply migrations:
 ```bash
 dotnet ef database update
 ```
-5. Run the project:
+4. Run the project:
 ```bash
 dotnet run
 ```
 
 ---
 
-##📌 Future Improvements
+## 📌 Future Improvements
 - AI-powered recommendation system 🤖
 - Frontend integration
 - Email verification (OTP)
 
 ---
 
-##🤝 Contribution
-- Feel free to fork or contribute!
+## 🤝 Contribution
+- Feel free to fork the repository or contribute.
