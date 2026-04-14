@@ -1,12 +1,9 @@
 ﻿using ECommerceAPI.Models;
+using ECommerceAPI.Repositories.Generic;
 
 namespace ECommerceAPI.Repositories.Interfaces
 {
-    public interface ICategoryRepository
+    public interface ICategoryRepository : IGenericRepository<Category>
     {
-        Task<List<Category>> GetAllAsync();
-        Task<Category?> GetByIdAsync(int id);
-        Task AddAsync(Category category);
-        Task DeleteAsync(Category category);
     }
 }

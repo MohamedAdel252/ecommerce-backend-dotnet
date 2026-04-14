@@ -1,15 +1,17 @@
 ﻿using ECommerceAPI.Data;
 using ECommerceAPI.Models;
+using ECommerceAPI.Repositories;
 using ECommerceAPI.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using ECommerceAPI.Repositories.Generic;
 
 namespace ECommerceAPI.Repositories.Implementations
 {
-    public class CartRepository : ICartRepository
+    public class CartRepository : GenericRepository<Cart>, ICartRepository
     {
         private readonly AppDbContext _context;
 
-        public CartRepository(AppDbContext context)
+        public CartRepository(AppDbContext context) : base(context)
         {
             _context = context;
         }
@@ -24,7 +26,8 @@ namespace ECommerceAPI.Repositories.Implementations
 
         public async Task<Product?> GetProductByIdAsync(int productId)
         {
-            return await _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
+            return await _context.Products
+                .FirstOrDefaultAsync(p => p.Id == productId);
         }
 
         public async Task<CartItem?> GetCartItemByIdForUserAsync(int userId, int cartItemId)
@@ -32,22 +35,14 @@ namespace ECommerceAPI.Repositories.Implementations
             return await _context.CartItems
                 .Include(ci => ci.Cart)
                 .Include(ci => ci.Product)
-                .FirstOrDefaultAsync(ci => ci.Id == cartItemId && ci.Cart != null && ci.Cart.UserId == userId);
-        }
-
-        public async Task AddCartAsync(Cart cart)
-        {
-            await _context.Carts.AddAsync(cart);
+                .FirstOrDefaultAsync(ci => ci.Id == cartItemId &&
+                                           ci.Cart != null &&
+                                           ci.Cart.UserId == userId);
         }
 
         public async Task AddCartItemAsync(CartItem cartItem)
         {
             await _context.CartItems.AddAsync(cartItem);
-        }
-
-        public void RemoveCart(Cart cart)
-        {
-            _context.Carts.Remove(cart);
         }
 
         public void RemoveCartItem(CartItem cartItem)
@@ -60,10 +55,9 @@ namespace ECommerceAPI.Repositories.Implementations
             _context.CartItems.RemoveRange(cartItems);
         }
 
-        public Task UpdateAsync(Product product)
+        public void UpdateProduct(Product product)
         {
             _context.Products.Update(product);
-            return Task.CompletedTask;
         }
     }
 }

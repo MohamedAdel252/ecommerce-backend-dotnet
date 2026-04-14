@@ -67,7 +67,7 @@ namespace ECommerceAPI.Services.Implementations
             if (cart == null)
             {
                 cart = new Cart { UserId = userId };
-                await _cartRepository.AddCartAsync(cart);
+                await _cartRepository.AddAsync(cart);
                 await _unitOfWork.SaveChangesAsync();
 
                 cart = await _cartRepository.GetCartByUserIdAsync(userId)

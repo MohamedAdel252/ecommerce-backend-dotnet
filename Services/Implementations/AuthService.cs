@@ -147,7 +147,7 @@ namespace ECommerceAPI.Services.Implementations
                 user.PhoneNumber = phone;
             }
 
-            await _userRepository.UpdateAsync(user);
+            _userRepository.Update(user);
             await _unitOfWork.SaveChangesAsync();
             return true;
         }
@@ -180,7 +180,7 @@ namespace ECommerceAPI.Services.Implementations
 
             user.PasswordHash = HashPassword(dto.NewPassword);
 
-            await _userRepository.UpdateAsync(user);
+            _userRepository.Update(user);
             await _unitOfWork.SaveChangesAsync();
             return true;
         }
@@ -207,7 +207,7 @@ namespace ECommerceAPI.Services.Implementations
 
             user.Email = dto.NewEmail;
 
-            await _userRepository.UpdateAsync(user);
+            _userRepository.Update(user);
             await _unitOfWork.SaveChangesAsync();
             return true;
         }

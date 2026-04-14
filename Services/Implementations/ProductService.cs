@@ -84,7 +84,7 @@ namespace ECommerceAPI.Services.Implementations
             if (product == null)
                 throw new Exception("Product not found.");
 
-            await _productRepository.DeleteAsync(product);
+            _productRepository.Delete(product);
             await _unitOfWork.SaveChangesAsync();
         }
 
@@ -144,7 +144,7 @@ namespace ECommerceAPI.Services.Implementations
                 product.StockQuantity = dto.StockQuantity.Value;
             }
 
-            await _productRepository.UpdateAsync(product);
+            _productRepository.Update(product);
             await _unitOfWork.SaveChangesAsync();
             return true;
         }

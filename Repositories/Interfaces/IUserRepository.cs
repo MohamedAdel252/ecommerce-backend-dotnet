@@ -1,14 +1,12 @@
 ﻿using ECommerceAPI.Models;
+using ECommerceAPI.Repositories.Generic;
 
 namespace ECommerceAPI.Repositories.Interfaces
 {
-    public interface IUserRepository
+    public interface IUserRepository : IGenericRepository<User>
     {
         Task<bool> EmailExistsAsync(string email);
         Task<User?> GetByEmailAsync(string email);
-        Task AddAsync(User user);
-        Task<User?> GetByIdAsync(int id);
         Task<User?> GetByPhoneNumberAsync(string phoneNumber);
-        Task UpdateAsync(User user);
     }
 }

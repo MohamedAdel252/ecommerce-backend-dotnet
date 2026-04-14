@@ -56,7 +56,7 @@ namespace ECommerceAPI.Services.Implementations
                 item.Product.StockQuantity -= item.Quantity;
             }
 
-            await _orderRepository.AddOrderAsync(order);
+            await _orderRepository.AddAsync(order);
             _orderRepository.RemoveCartItemsRange(cart.CartItems);
             await _unitOfWork.SaveChangesAsync();
         }
@@ -124,7 +124,7 @@ namespace ECommerceAPI.Services.Implementations
                 throw new ArgumentException("Invalid order status.");
 
             order.Status = (OrderStatus)dto.OrderStatus;
-            await _orderRepository.UpdateAsync(order);
+            _orderRepository.Update(order);
             await _unitOfWork.SaveChangesAsync();
             return true;
         }

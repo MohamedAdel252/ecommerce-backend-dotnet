@@ -18,7 +18,7 @@ namespace ECommerceAPI.Services.Implementations
 
         public async Task<List<Category>> GetAllAsync()
         {
-            return await _categoryRepository.GetAllAsync();
+            return (await _categoryRepository.GetAllAsync()).ToList();
         }
 
         public async Task<Category?> GetByIdAsync(int id)
@@ -52,7 +52,7 @@ namespace ECommerceAPI.Services.Implementations
             if (category == null)
                 throw new Exception("Category not found.");
 
-            await _categoryRepository.DeleteAsync(category);
+            _categoryRepository.Delete(category);
             await _unitOfWork.SaveChangesAsync();
         }
     }

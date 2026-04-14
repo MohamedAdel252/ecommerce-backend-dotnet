@@ -9,6 +9,7 @@ using ECommerceAPI.Repositories.Interfaces;
 using ECommerceAPI.Repositories.Implementations;
 using ECommerceAPI.Services.Interfaces;
 using ECommerceAPI.Services.Implementations;
+using ECommerceAPI.Repositories.Generic;
 
 namespace ECommerceAPI
 {
@@ -47,6 +48,7 @@ namespace ECommerceAPI
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IRecommendationRepository, RecommendationRepository>();
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             // New Code here
             var jwtSettings = builder.Configuration.GetSection("Jwt");
             var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]!);

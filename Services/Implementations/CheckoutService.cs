@@ -3,6 +3,7 @@ using ECommerceAPI.Models;
 using ECommerceAPI.Repositories.Implementations;
 using ECommerceAPI.Repositories.Interfaces;
 using ECommerceAPI.Services.Interfaces;
+using ECommerceAPI.Repositories.Generic;
 
 namespace ECommerceAPI.Services.Implementations
 {
@@ -80,8 +81,8 @@ namespace ECommerceAPI.Services.Implementations
                 item.Product!.StockQuantity -= item.Quantity;
             }
 
-            await _orderRepository.AddOrderAsync(order);
-            _cartRepository.RemoveCart(cart);
+            await _orderRepository.AddAsync(order); ;
+            _cartRepository.Delete(cart);
             await _unitOfWork.SaveChangesAsync();
 
             if (dto.PaymentMethod == PaymentMethod.Card)

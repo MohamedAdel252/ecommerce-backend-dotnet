@@ -1,22 +1,15 @@
 ﻿using ECommerceAPI.Data;
 using ECommerceAPI.Models;
+using ECommerceAPI.Repositories.Generic;
 using ECommerceAPI.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceAPI.Repositories.Implementations
 {
-    public class OrderRepository : IOrderRepository
+    public class OrderRepository : GenericRepository<Order>, IOrderRepository
     {
-        private readonly AppDbContext _context;
-
-        public OrderRepository(AppDbContext context)
+        public OrderRepository(AppDbContext context) : base(context)
         {
-            _context = context;
-        }
-
-        public async Task AddOrderAsync(Order order)
-        {
-            await _context.Orders.AddAsync(order);
         }
 
         public async Task<Order?> GetOrderByIdAsync(int orderId)
@@ -47,7 +40,7 @@ namespace ECommerceAPI.Repositories.Implementations
                 .ToListAsync();
         }
 
-        public async Task<Order?> GetByIdAsync(int id)
+        public override async Task<Order?> GetByIdAsync(int id)
         {
             return await _context.Orders
                 .Include(o => o.OrderItems)
@@ -73,11 +66,6 @@ namespace ECommerceAPI.Repositories.Implementations
         public void RemoveCartItemsRange(IEnumerable<CartItem> cartItems)
         {
             _context.CartItems.RemoveRange(cartItems);
-        }
-        public Task UpdateAsync(Order order)
-        {
-            _context.Orders.Update(order);
-            return Task.CompletedTask;
         }
     }
 }
