@@ -19,7 +19,7 @@ namespace ECommerceAPI.Services.Implementations
             var options = new SessionCreateOptions
             {
                 Mode = "payment",
-                SuccessUrl = "https://localhost:7173/api/payment/success?sessionId={CHECKOUT_SESSION_ID}",
+                SuccessUrl = "http://localhost:4200/?payment=success",
                 CancelUrl = "https://localhost:7173/api/payment/cancel",
                 ClientReferenceId = order.Id.ToString(),
                 PaymentMethodTypes = new List<string> { "card" },

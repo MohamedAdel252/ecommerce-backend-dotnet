@@ -1,7 +1,9 @@
-﻿namespace ECommerceAPI.DTOs.OrderDTOs
+﻿using ECommerceAPI.Models;
+
+namespace ECommerceAPI.DTOs.OrderDTOs
 {
     public class UpdateOrderStatusDto
     {
-        public int OrderStatus { get; set; }
+        public string Status { get; set; } = string.Empty;
     }
 }

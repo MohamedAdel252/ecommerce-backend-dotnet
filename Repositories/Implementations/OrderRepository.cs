@@ -67,5 +67,18 @@ namespace ECommerceAPI.Repositories.Implementations
         {
             _context.CartItems.RemoveRange(cartItems);
         }
+
+        public async Task<List<Order>> GetAllOrdersForAdminAsync()
+        {
+            return await _context.Orders
+                .Include(o => o.OrderItems)
+                .OrderByDescending(o => o.CreatedAt)
+                .ToListAsync();
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }

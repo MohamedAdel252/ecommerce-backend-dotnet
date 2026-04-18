@@ -115,15 +115,19 @@ namespace ECommerceAPI.Services.Implementations
 
         public async Task<bool> PatchOrderStatusAsync(int orderId, UpdateOrderStatusDto dto)
         {
+            if (!Enum.TryParse<OrderStatus>(dto.Status, true, out var parsedStatus))
+                throw new Exception("Invalid order status. Allowed values: Pending, Completed, Cancelled.");
+
+            
             var order = await _orderRepository.GetByIdAsync(orderId);
 
             if (order == null)
                 return false;
 
-            if (!Enum.IsDefined(typeof(OrderStatus), dto.OrderStatus))
+            if (!Enum.IsDefined(typeof(OrderStatus), dto.Status))
                 throw new ArgumentException("Invalid order status.");
 
-            order.Status = (OrderStatus)dto.OrderStatus;
+            order.Status = parsedStatus;
             _orderRepository.Update(order);
             await _unitOfWork.SaveChangesAsync();
             return true;
@@ -146,6 +150,56 @@ namespace ECommerceAPI.Services.Implementations
                     TotalPrice = oi.UnitPrice * oi.Quantity
                 }).ToList()
             };
+        }
+
+        public async Task<IEnumerable<object>> GetAllOrdersForAdminAsync()
+        {
+            var orders = await _orderRepository.GetAllOrdersForAdminAsync();
+
+            return orders.Select(o => new
+            {
+                orderId = o.Id,
+                createdAt = o.CreatedAt,
+                status = o.Status.ToString(),
+                paymentStatus = o.PaymentStatus.ToString(),
+                paymentMethod = o.PaymentMethod.ToString(),
+                totalPrice = o.TotalAmount,
+                recipientName = o.RecipientName,
+                items = o.OrderItems.Select(i => new
+                {
+                    productName = i.Product.Name,
+                    quantity = i.Quantity,
+                    totalPrice = i.Order.TotalAmount
+                }).ToList()
+            });
+        }
+
+        public async Task<bool> UpdateOrderStatusAsync(int orderId, UpdateOrderStatusDto dto)
+        {
+            var order = await _orderRepository.GetByIdAsync(orderId);
+            if (order == null) return false;
+
+            if (!Enum.TryParse<OrderStatus>(dto.Status, true, out var parsedStatus))
+                throw new Exception("Invalid order status. Allowed values: Pending, Completed, Cancelled.");
+
+            order.Status = parsedStatus;
+
+            await _orderRepository.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> UpdatePaymentStatusAsync(int orderId, UpdatePaymentStatusDto dto)
+        {
+            var order = await _orderRepository.GetByIdAsync(orderId);
+            if (order == null) return false;
+
+            if (!Enum.TryParse<PaymentStatus>(dto.PaymentStatus, true, out var parsedPaymentStatus))
+                throw new Exception("Invalid payment status. Allowed values: Pending, Paid, Failed.");
+
+            order.PaymentStatus = parsedPaymentStatus;
+
+            await _orderRepository.SaveChangesAsync();
+            return true;
         }
     }
 }

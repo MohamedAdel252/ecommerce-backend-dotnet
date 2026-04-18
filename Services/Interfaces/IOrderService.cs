@@ -10,5 +10,9 @@ namespace ECommerceAPI.Services.Interfaces
         Task<object> CancelOrderAsync(int userId, int orderId);
         Task<List<OrderResponseDto>> GetAllOrdersAsync();
         Task<bool> PatchOrderStatusAsync(int orderId, UpdateOrderStatusDto dto);
+
+        Task<IEnumerable<object>> GetAllOrdersForAdminAsync();
+        Task<bool> UpdateOrderStatusAsync(int orderId, UpdateOrderStatusDto dto);
+        Task<bool> UpdatePaymentStatusAsync(int orderId, UpdatePaymentStatusDto dto);
     }
 }

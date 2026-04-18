@@ -3,6 +3,7 @@ using ECommerceAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceAPI.Controllers
 {
@@ -99,6 +100,25 @@ namespace ECommerceAPI.Controllers
             catch (ArgumentException ex)
             {
                 return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPatch("{id}/payment-status")]
+        public async Task<IActionResult> UpdatePaymentStatus(int id, [FromBody] UpdatePaymentStatusDto dto)
+        {
+            try
+            {
+                var updated = await _orderService.UpdatePaymentStatusAsync(id, dto);
+
+                if (!updated)
+                    return NotFound("Order not found.");
+
+                return Ok("Payment status updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }

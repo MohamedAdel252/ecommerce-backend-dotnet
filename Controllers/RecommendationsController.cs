@@ -31,7 +31,7 @@ namespace ECommerceAPI.Controllers
             var result = await _recommendationService.GetForYouRecommendationsAsync(userId);
             return Ok(result);
         }
-
+        [AllowAnonymous]
         [HttpGet("related/{productId}")]
         public async Task<ActionResult<IEnumerable<RecommendationResponseDto>>> GetRelatedProducts(int productId)
         {
@@ -45,21 +45,21 @@ namespace ECommerceAPI.Controllers
                 return NotFound(ex.Message);
             }
         }
-
+        [AllowAnonymous]
         [HttpGet("best-sellers")]
         public async Task<ActionResult<IEnumerable<RecommendationResponseDto>>> GetBestSellers([FromQuery] int count = 10)
         {
             var result = await _recommendationService.GetBestSellersAsync(count);
             return Ok(result);
         }
-
+        [AllowAnonymous]
         [HttpGet("frequently-bought/{productId}")]
         public async Task<ActionResult<IEnumerable<RecommendationResponseDto>>> GetFrequentlyBought(int productId, [FromQuery] int count = 5)
         {
             var result = await _recommendationService.GetFrequentlyBoughtTogetherAsync(productId, count);
             return Ok(result);
         }
-
+        [AllowAnonymous]
         [HttpGet("home-feed")]
         public async Task<ActionResult<HomeFeedResponseDto>> GetHomeFeed()
         {

@@ -91,7 +91,7 @@ namespace ECommerceAPI.Services.Implementations
                         </div>
 
                         <div style='padding:20px'>
-                            <h2 style='color:#0d1b2a'>Payment Confirmed 🎉</h2>
+                            <h2 style='color:#0d1b2a'>Payment Confirmed ✅</h2>
                             <p>Your order <strong>#{order.Id}</strong> has been successfully paid.</p>
 
                             <div style='background:#f9fafb; padding:15px; border-radius:8px; margin:15px 0'>

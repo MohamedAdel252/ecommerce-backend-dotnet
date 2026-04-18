@@ -10,6 +10,9 @@ namespace ECommerceAPI.Repositories.Interfaces
         Task<List<Order>> GetAllOrdersAsync();
         Task<Order?> GetByIdWithItemsAndProductsAsync(int id);
         Task<Cart?> GetCartWithItemsAndProductsByUserIdAsync(int userId);
+        Task<List<Order>> GetAllOrdersForAdminAsync();
+        Task SaveChangesAsync();
+
         void RemoveCartItemsRange(IEnumerable<CartItem> cartItems);
     }
 }

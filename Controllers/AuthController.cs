@@ -1,9 +1,10 @@
-﻿using System.Security.Claims;
+﻿using ECommerceAPI.DTOs;
 using ECommerceAPI.DTOs.Auth;
+using ECommerceAPI.Repositories.Interfaces;
+using ECommerceAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ECommerceAPI.DTOs;
-using ECommerceAPI.Services.Interfaces;
+using System.Security.Claims;
 
 
 namespace ECommerceAPI.Controllers
@@ -13,10 +14,12 @@ namespace ECommerceAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly IUserRepository _userRepository;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IUserRepository userRepository)
         {
             _authService = authService;
+            _userRepository = userRepository;
         }
 
         [HttpPost("register")]
@@ -147,6 +150,29 @@ namespace ECommerceAPI.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
+        }
+
+        [HttpGet("me")]
+        [Authorize]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+                return Unauthorized();
+
+            var user = await _userRepository.GetByIdAsync(int.Parse(userId));
+
+            if (user == null)
+                return NotFound();
+
+            return Ok(new
+            {
+                user.Id,
+                user.FullName,
+                user.Email,
+                user.PhoneNumber
+            });
         }
     }
 }
