@@ -12,10 +12,12 @@ namespace ECommerceAPI.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _service;
+        private readonly ICloudinaryService _cloudinaryService;
 
-        public ProductsController(IProductService service)
+        public ProductsController(IProductService service, ICloudinaryService cloudinaryService)
         {
             _service = service;
+            _cloudinaryService = cloudinaryService;
         }
 
         [HttpGet]
@@ -117,6 +119,32 @@ namespace ECommerceAPI.Controllers
             catch (ArgumentException ex)
             {
                 return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("upload-image")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UploadImage([FromForm] UploadImageDto dto)
+        {
+            try
+            {
+                if (dto.File == null || dto.File.Length == 0)
+                    return BadRequest("No file uploaded");
+
+                if (!dto.File.ContentType.StartsWith("image/"))
+                    return BadRequest("Only image files are allowed");
+
+                var imageUrl = await _cloudinaryService.UploadImageAsync(dto.File);
+
+                if (string.IsNullOrEmpty(imageUrl))
+                    return BadRequest("Image upload failed");
+
+                return Ok(new { imageUrl });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }

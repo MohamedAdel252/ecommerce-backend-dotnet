@@ -49,9 +49,21 @@ namespace ECommerceAPI
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IRecommendationRepository, RecommendationRepository>();
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
             // New Code here
             var jwtSettings = builder.Configuration.GetSection("Jwt");
             var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]!);
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngular",
+                    policy =>
+                    {
+                        policy.WithOrigins("http://localhost:4200")
+                              .AllowAnyHeader()
+                              .AllowAnyMethod();
+                    });
+            });
 
             builder.Services.AddAuthentication(options =>
             {
@@ -85,6 +97,7 @@ namespace ECommerceAPI
             }
 
             app.UseHttpsRedirection();
+            app.UseCors("AllowAngular");
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
