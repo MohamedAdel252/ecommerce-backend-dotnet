@@ -19,7 +19,6 @@ namespace ECommerceAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -36,13 +35,13 @@ namespace ECommerceAPI
 
             builder.Services.AddScoped<ICartRepository, CartRepository>();
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-            builder.Services.AddScoped<ICheckoutService, ECommerceAPI.Services.Implementations.CheckoutService>();
-            builder.Services.AddScoped<IPaymentService, ECommerceAPI.Services.Implementations.PaymentService>();
-            builder.Services.AddScoped<IRecommendationService, ECommerceAPI.Services.Implementations.RecommendationService>();
-            builder.Services.AddScoped<IOrderService, ECommerceAPI.Services.Implementations.OrderService>();
-            builder.Services.AddScoped<ICartService, ECommerceAPI.Services.Implementations.CartService>();
+            builder.Services.AddScoped<ICheckoutService, CheckoutService>();
+            builder.Services.AddScoped<IPaymentService, PaymentService>();
+            builder.Services.AddScoped<IRecommendationService, RecommendationService>();
+            builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<ICartService, CartService>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
-            builder.Services.AddScoped<IProductService, ECommerceAPI.Services.Implementations.ProductService>();
+            builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -50,19 +49,22 @@ namespace ECommerceAPI
             builder.Services.AddScoped<IRecommendationRepository, RecommendationRepository>();
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
-            // New Code here
+
             var jwtSettings = builder.Configuration.GetSection("Jwt");
             var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]!);
 
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("AllowAngular",
-                    policy =>
-                    {
-                        policy.WithOrigins("http://localhost:4200")
-                              .AllowAnyHeader()
-                              .AllowAnyMethod();
-                    });
+                options.AddPolicy("AllowAngular", policy =>
+                {
+                    policy
+                        .WithOrigins(
+                            "http://localhost:4200",
+                            "https://your-netlify-app.netlify.app"
+                        )
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
             });
 
             builder.Services.AddAuthentication(options =>
@@ -78,28 +80,24 @@ namespace ECommerceAPI
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-
                     ValidIssuer = jwtSettings["Issuer"],
                     ValidAudience = jwtSettings["Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
             });
-            // last here
 
             var app = builder.Build();
+
             StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
-            // Configure middleware
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
             app.UseCors("AllowAngular");
             app.UseAuthentication();
             app.UseAuthorization();
+
             app.MapControllers();
 
             app.Run();
