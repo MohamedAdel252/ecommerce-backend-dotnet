@@ -3,12 +3,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ECommerceAPI.Models;
-using Stripe;
 using System.Text;
 using ECommerceAPI.Repositories.Interfaces;
 using ECommerceAPI.Repositories.Implementations;
 using ECommerceAPI.Services.Interfaces;
-using ECommerceAPI.Services.Implementations;
 using ECommerceAPI.Repositories.Generic;
 
 namespace ECommerceAPI
@@ -29,26 +27,26 @@ namespace ECommerceAPI
 
             builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
 
-            builder.Services.AddScoped<IStripeService, StripeService>();
-            builder.Services.AddScoped<IEmailService, ResendEmailService>();
+            builder.Services.AddScoped<IStripeService, ECommerceAPI.Services.Implementations.StripeService>();
+            builder.Services.AddScoped<IEmailService, ECommerceAPI.Services.Implementations.ResendEmailService>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Services.AddScoped<ICartRepository, CartRepository>();
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-            builder.Services.AddScoped<ICheckoutService, CheckoutService>();
-            builder.Services.AddScoped<IPaymentService, PaymentService>();
-            builder.Services.AddScoped<IRecommendationService, RecommendationService>();
-            builder.Services.AddScoped<IOrderService, OrderService>();
-            builder.Services.AddScoped<ICartService, CartService>();
+            builder.Services.AddScoped<ICheckoutService, ECommerceAPI.Services.Implementations.CheckoutService>();
+            builder.Services.AddScoped<IPaymentService, ECommerceAPI.Services.Implementations.PaymentService>();
+            builder.Services.AddScoped<IRecommendationService, ECommerceAPI.Services.Implementations.RecommendationService>();
+            builder.Services.AddScoped<IOrderService, ECommerceAPI.Services.Implementations.OrderService>();
+            builder.Services.AddScoped<ICartService, ECommerceAPI.Services.Implementations.CartService>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
-            builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<IProductService, ECommerceAPI.Services.Implementations.ProductService>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-            builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<ICategoryService, ECommerceAPI.Services.Implementations.CategoryService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
-            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IAuthService, ECommerceAPI.Services.Implementations.AuthService>();
             builder.Services.AddScoped<IRecommendationRepository, RecommendationRepository>();
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+            builder.Services.AddScoped<ICloudinaryService, ECommerceAPI.Services.Implementations.CloudinaryService>();
 
             var jwtSettings = builder.Configuration.GetSection("Jwt");
             var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]!);
@@ -88,7 +86,7 @@ namespace ECommerceAPI
 
             var app = builder.Build();
 
-            StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+            Stripe.StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
             app.UseSwagger();
             app.UseSwaggerUI();
