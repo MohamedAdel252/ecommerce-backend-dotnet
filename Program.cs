@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ECommerceAPI.Models;
-using Stripe;
 using System.Text;
 using ECommerceAPI.Repositories.Interfaces;
 using ECommerceAPI.Repositories.Implementations;
@@ -28,8 +27,8 @@ namespace ECommerceAPI
 
             builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
 
-            builder.Services.AddScoped<IStripeService, StripeService>();
-            builder.Services.AddScoped<IEmailService, ResendEmailService>();
+            builder.Services.AddScoped<IStripeService, ECommerceAPI.Services.Implementations.StripeService>();
+            builder.Services.AddScoped<IEmailService, ECommerceAPI.Services.Implementations.ResendEmailService>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Services.AddScoped<ICartRepository, CartRepository>();
@@ -84,7 +83,7 @@ namespace ECommerceAPI
 
             var app = builder.Build();
 
-            StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+            Stripe.StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
             app.UseSwagger();
             app.UseSwaggerUI();
