@@ -22,7 +22,7 @@ namespace ECommerceAPI
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(
+                options.UseNpgsql(
                     builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
@@ -56,10 +56,7 @@ namespace ECommerceAPI
                 options.AddPolicy("AllowAngular", policy =>
                 {
                     policy
-                        .WithOrigins(
-                            "http://localhost:4200",
-                            "https://your-netlify-app.netlify.app"
-                        )
+                        .WithOrigins("http://localhost:4200")
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
@@ -95,6 +92,12 @@ namespace ECommerceAPI
             app.UseCors("AllowAngular");
             app.UseAuthentication();
             app.UseAuthorization();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                db.Database.Migrate();
+            }
 
             app.MapControllers();
 
