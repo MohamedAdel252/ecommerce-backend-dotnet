@@ -22,7 +22,7 @@ namespace ECommerceAPI
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(
+                options.UseNpgsql(
                     builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
