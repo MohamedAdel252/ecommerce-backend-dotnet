@@ -56,7 +56,10 @@ namespace ECommerceAPI
                 options.AddPolicy("AllowAngular", policy =>
                 {
                     policy
-                        .WithOrigins("http://localhost:4200")
+                        .WithOrigins(
+                            "http://localhost:4200",
+                            "https://spectacular-kitsune-6e4132.netlify.app"
+                        )
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
