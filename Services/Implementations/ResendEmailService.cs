@@ -22,10 +22,11 @@ namespace ECommerceAPI.Services.Implementations
 
             _httpClient.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", apiKey);
-
+                
+            var fromEmail = _configuration["Resend:FromEmail"];
             var emailData = new
             {
-                from = "onboarding@resend.dev",
+                from = fromEmail,
                 to = new[] { toEmail },
                 subject = subject,
                 html = body
