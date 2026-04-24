@@ -58,7 +58,7 @@ namespace ECommerceAPI
                     policy
                         .WithOrigins(
                             "http://localhost:4200",
-                            "https://spectacular-kitsune-6e4132.netlify.app"
+                            "https://spectacular-kitsune-6e4132.netlify.app",
                             "https://electronics-store1.netlify.app"
                         )
                         .AllowAnyHeader()
