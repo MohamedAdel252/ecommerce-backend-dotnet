@@ -19,8 +19,8 @@ namespace ECommerceAPI.Services.Implementations
             var options = new SessionCreateOptions
             {
                 Mode = "payment",
-                SuccessUrl = "https://spectacular-kitsune-6e4132.netlify.app/?status=success",
-                CancelUrl = "https://spectacular-kitsune-6e4132.netlify.app/?status=success",
+                SuccessUrl = "https://electronics-store1.netlify.app/?status=success",
+                CancelUrl = "https://electronics-store1.netlify.app/?status=success",
                 ClientReferenceId = order.Id.ToString(),
                 PaymentMethodTypes = new List<string> { "card" },
                 LineItems = new List<SessionLineItemOptions>
